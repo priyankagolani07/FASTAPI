@@ -48,13 +48,23 @@ def create_product(product_data:ProductDTO):
     products.append(product_data)
     return {"status":"Product created successfully...", "data":products}
 
+@app.put("/update_product/{product_id}")
 def update_product(product_data:ProductDTO, product_id:int):
-    for oneProduct in products:
-        
-    return {"status" : "Product updated successfully"}
+    for index, oneProduct in enumerate(products):
+        if oneProduct.get("id") == product_id:
+            products[index] = product_data.model_dump()
+            return {"status" : "Product updated successfully", "product":product_data}
+    return {"error": "Product not found for this id."}
+
+@app.delete("/delete_product/{product_id}")
+def delete_product(product_id:int):
+    for index, oneProduct in enumerate(products):
+            if oneProduct.get("id") == product_id:
+                deleted_product = products.pop(index)
+                return {"status" : "Product deleted successfully", "product":deleted_product}
+    return {"error": "Product not found for this id."}
+
 # Body, Headers - Request Headers, Query Params
-
-
 # print(fastapi.__version__)
 # fastapi dev main.py
 # fastapi dev main.py --RELOAD
